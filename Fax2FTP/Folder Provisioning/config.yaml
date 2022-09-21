@@ -1,0 +1,5 @@
+db_auth:
+  user: ''
+  password: ''
+  host: ''
+  database: ''

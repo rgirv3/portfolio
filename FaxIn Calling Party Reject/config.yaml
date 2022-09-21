@@ -1,0 +1,4 @@
+ssh_auth:
+  user: 'gregoryi' # Your AD username goes here
+  private_key: '' # Full filepath to your private SSH key, OPEN SSH format
+  host: ''
