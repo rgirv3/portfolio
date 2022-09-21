@@ -1,38 +1,13 @@
-##
-##███╗   ███╗ █████╗ ██╗██╗     ██████╗ ███████╗ █████╗ ██╗  ██╗                              
-##████╗ ████║██╔══██╗██║██║     ╚════██╗██╔════╝██╔══██╗╚██╗██╔╝                              
-##██╔████╔██║███████║██║██║      █████╔╝█████╗  ███████║ ╚███╔╝                               
-##██║╚██╔╝██║██╔══██║██║██║     ██╔═══╝ ██╔══╝  ██╔══██║ ██╔██╗                               
-##██║ ╚═╝ ██║██║  ██║██║███████╗███████╗██║     ██║  ██║██╔╝ ██╗                              
-##╚═╝     ╚═╝╚═╝  ╚═╝╚═╝╚══════╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝                              
-##                                                                                            
-##██████╗ ███████╗ █████╗  ██████╗████████╗██╗██╗   ██╗ █████╗ ████████╗██╗ ██████╗ ███╗   ██╗
-##██╔══██╗██╔════╝██╔══██╗██╔════╝╚══██╔══╝██║██║   ██║██╔══██╗╚══██╔══╝██║██╔═══██╗████╗  ██║
-##██║  ██║█████╗  ███████║██║        ██║   ██║██║   ██║███████║   ██║   ██║██║   ██║██╔██╗ ██║
-##██║  ██║██╔══╝  ██╔══██║██║        ██║   ██║╚██╗ ██╔╝██╔══██║   ██║   ██║██║   ██║██║╚██╗██║
-##██████╔╝███████╗██║  ██║╚██████╗   ██║   ██║ ╚████╔╝ ██║  ██║   ██║   ██║╚██████╔╝██║ ╚████║
-##╚═════╝ ╚══════╝╚═╝  ╚═╝ ╚═════╝   ╚═╝   ╚═╝  ╚═══╝  ╚═╝  ╚═╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
-##
-##                                                                                           
-## This Script was a collaboration between Patrick and Greg 
-## to automate the deactivation of all M2F hierarchical     
-## levels.
-##
-## The need was realized after a customer was still
-## able to fax out because of 'client' level settings.
-##
-## Enjoy!
-
 import requests, re
         
 print("Mail2Fax Deactivation v1\n")
 CUNO = input("What is the customer number you would like to deactivate? (i.e. 99999US): ").upper()
 email = input("What is your email address? ")
 modified_by = "?modified_by=" + email
-cuno_url = "http://config.mtf.de.service.retloc/rest/v1/customers/" + CUNO
-users_url = "http://config.mtf.de.service.retloc/rest/v1/users?customer_number=" + CUNO + "&limit=5000"
-clients_url = "http://config.mtf.de.service.retloc/rest/v1/customers/" + CUNO + "/clients"
-profiles_url = "http://config.mtf.de.service.retloc/rest/v1/customers/" + CUNO + "/profiles"
+cuno_url = "" + CUNO
+users_url = "" + CUNO + "&limit=5000"
+clients_url = "" + CUNO + "/clients"
+profiles_url = "" + CUNO + "/profiles"
 
 ## This first check is on the customer url level, but it actually modifies the default profile's active value.
 def cust_check():
@@ -61,7 +36,7 @@ def profile_check():
         if profiles_deactivate == "yes" or profiles_deactivate == "y":
             profiles = re.findall('profile-name="(.*?)"', data)  
             for profile in profiles:
-                profile_url = "http://config.mtf.de.service.retloc/rest/v1/customers/" + CUNO + "/profiles/" + profile
+                profile_url = "" + CUNO + "/profiles/" + profile
                 resp = requests.get(profile_url)
                 data = resp.text
                 if data.count("enabled=\"true\"") == 1:
@@ -89,7 +64,7 @@ def client_check():
         if clients_deactivate == "yes" or clients_deactivate == "y":
             clients = re.findall('client-name="(.*?)"', data)
             for client in clients:
-                client_url = "http://config.mtf.de.service.retloc/rest/v1/customers/" + CUNO + "/clients/" + client
+                client_url = "" + CUNO + "/clients/" + client
                 resp = requests.get(client_url)
                 data = resp.text
                 update = data.replace("enabled=\"true\"", "")
@@ -120,7 +95,7 @@ def user_check():
                 user = user.replace("local-part=","")
                 user = user.replace("domain-name=","@")
                 user = user.replace("\"","")
-                user_url = "http://config.mtf.de.service.retloc/rest/v1/users/" + user
+                user_url = "" + user
                 resp = requests.get(user_url)
                 data = resp.text
                 update = data.replace("enabled=\"true\"", "")
